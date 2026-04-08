@@ -1,0 +1,38 @@
+services:
+  # 1. 데이터베이스 서비스 (PostgreSQL + pgvector)
+  db:
+    image: ankane/pgvector:latest
+    container_name: review_db
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-password}
+      POSTGRES_DB: ${DB_NAME:-review_sense}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # 2. 백엔드 API 서비스
+  backend:
+    build: .
+    container_name: review_api
+    restart: always
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://${DB_USER:-postgres}:${DB_PASSWORD:-password}@db:5432/${DB_NAME:-review_sense}
+      - PYTHONPATH=/app # [추가] 컨테이너 내 모든 폴더를 모듈로 인식하게 함
+    volumes:
+      - .:/app # [핵심 추가] 로컬의 모든 파일(scripts 포함)을 실시간으로 컨테이너와 동기화
+    command: >
+      sh -c "sleep 3 && 
+             python -m database.init_db && 
+             uvicorn app.main:app --host 0.0.0.0 --port 8000"
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:

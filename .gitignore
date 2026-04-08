@@ -1,0 +1,40 @@
+# === Python ===
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+env/
+build/
+dist/
+
+# === Environment Variables (보안 필수!) ===
+.env
+.env.local
+.env.*.local
+
+# === AI Models & Data (용량 및 저작권) ===
+# 대용량 모델 파일이나 로컬에 다운로드된 가중치 제외
+ai_models/weights/
+*.bin
+*.pt
+*.onnx
+models/
+.huggingface/
+
+# === Docker ===
+.docker/
+# 로컬 DB 데이터가 볼륨으로 마운트된 경우 제외 (보통 db_data 폴더 등)
+postgres_data/
+
+# === IDE & OS ===
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# === Application Logs & Temp ===
+logs/
+*.log
+temp/
+tmp/
