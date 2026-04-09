@@ -19,7 +19,6 @@ ai_models/weights/
 *.bin
 *.pt
 *.onnx
-models/
 .huggingface/
 
 # === Docker ===
